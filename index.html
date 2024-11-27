@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding and catch-up Progress Tracker</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            /* Black background */
+            color: #ffffff;
+            /* White text */
+            font-family: 'Courier New', Courier, monospace;
+            /* Military-style font */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2 {
+            text-transform: uppercase;
+        }
+
+        /* Top progress bar */
+        .top-progress-container {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #444;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+        }
+
+        .top-progress-label {
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #ccc;
+        }
+
+        .top-progress-bar {
+            height: 20px;
+            width: 100%;
+            background-color: #333;
+            /* Dark gray background */
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .top-progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background-color: #00bcd4;
+            /* Tactical blue */
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Section styling */
+        .section {
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: #00bcd4;
+        }
+
+        .section-header .arrow {
+            font-size: 18px;
+            color: #ccc;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.collapsed .arrow {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            display: none;
+            padding: 15px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            width: 100%;
+            background-color: #333;
+            /* Dark gray for the bar */
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background-color: #00bcd4;
+            /* Tactical blue for the progress */
+            transition: width 0.5s ease-in-out;
+        }
+
+
+        .progress-label {
+            font-size: 14px;
+            text-align: right;
+            color: #ccc;
+            /* Default light gray */
+            transition: color 0.3s ease-in-out;
+            /* Smooth color transition */
+        }
+
+
+        h1 {
+            text-transform: uppercase;
+            font-size: 20px;
+            color: white;
+            margin-top: 40px;
+            border-bottom: 2px solid #555;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 17px;
+            transition: color 0.3s ease-in-out;
+            /* Smooth color transition */
+        }
+
+
+        p {
+            font-size: 14px !important;
+        }
+
+        strong {
+            color: #00bcd4;
+        }
+
+
+        .legend-container {
+            margin-top: 20px;
+            border: 1px solid #444;
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .legend-container h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #00bcd4;
+            /* Tactical blue for header */
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+
+        .big_title{
+            text-transform: uppercase;
+            font-size: 26px;
+            color: #00bcd4;
+            margin-top: 40px;
+            border-bottom: 2px solid #555;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="big_title">My onboarding Progress Tracker</h1>
+
+        <!-- Information Section -->
+        <div class="info">
+            <p><strong>Name:</strong> Hamza Echcharqui</p>
+            <p><strong>Role:</strong> Cloud Integration Lead</p>
+            <p><strong>Description:</strong> This tracker monitors my learning progress across documentation and
+                technology areas in my onboarding phase.</p>
+
+            <!-- Legend -->
+            <div class="legend-container">
+                <h2>Legend</h2>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: yellow;"></span>
+                    <p>Not Started</p>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #00bcd4;"></span>
+                    <p>In Progress</p>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: lightgreen;"></span>
+                    <p>Completed</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Top progress bar -->
+        <div class="top-progress-container">
+            <div class="top-progress-label">Overall Progress: <span id="overall-progress-label">0%</span></div>
+            <div class="top-progress-bar">
+                <div class="top-progress-bar-inner" id="top-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Documentation Topics Section -->
+        <div id="documentation-topics">
+            <h1>Documentation Topics</h1>
+
+            <!-- Top progress bar -->
+            <div class="section" id="north-star">
+                <div class="section-header">
+                    <h2>North Star Architecture</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Understand the guiding principles and overall goals of the system.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-north-star"></div>
+                    </div>
+                    <div class="progress-label" id="label-north-star">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="application-architecture">
+                <div class="section-header">
+                    <h2>Solution Architecture: Application Architecture</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Key for understanding how applications are designed and interact, especially if they involve
+                        integrations you will manage.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-application-architecture"></div>
+                    </div>
+                    <div class="progress-label" id="label-application-architecture">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="key-solution-decisions">
+                <div class="section-header">
+                    <h2>Solution Architecture: Key Solution Decisions</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Learn the rationale behind major architectural decisions to align your integrations with these
+                        principles.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-key-solution-decisions"></div>
+                    </div>
+                    <div class="progress-label" id="label-key-solution-decisions">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="technical-enablers">
+                <div class="section-header">
+                    <h2>Solution Architecture: Technical Enablers</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Understand the tools and frameworks used to support the architecture.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-technical-enablers"></div>
+                    </div>
+                    <div class="progress-label" id="label-technical-enablers">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="api-endpoints">
+                <div class="section-header">
+                    <h2>Solution Architecture: Arsenal API Endpoint List</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Study this to understand API integration points, especially relevant for cloud and
+                        infrastructure-level coordination.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-api-endpoints"></div>
+                    </div>
+                    <div class="progress-label" id="label-api-endpoints">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="technical-bootstrap">
+                <div class="section-header">
+                    <h2>Technical Bootstrap</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Critical for understanding the initial setup and dependencies for integrations.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-technical-bootstrap"></div>
+                    </div>
+                    <div class="progress-label" id="label-technical-bootstrap">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="data-architecture">
+                <div class="section-header">
+                    <h2>Data Architecture</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Dive into this if your role involves data flows, pipelines, or ensuring infrastructure supports
+                        data
+                        processing.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-data-architecture"></div>
+                    </div>
+                    <div class="progress-label" id="label-data-architecture">25%</div>
+                </div>
+            </div>
+
+            <div class="section" id="reporting">
+                <div class="section-header">
+                    <h2>Reporting</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Focus on Technical Bootstrap Scope and Scrum of Scrum Report to stay informed about project
+                        progress
+                        and technical alignment.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-reporting"></div>
+                    </div>
+                    <div class="progress-label" id="label-reporting">10%</div>
+                </div>
+            </div>
+
+            <div class="section" id="quality-engineering">
+                <div class="section-header">
+                    <h2>Quality Engineering</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>If integrations require validation, understand Contract Testing and the Test Strategy.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-quality-engineering"></div>
+                    </div>
+                    <div class="progress-label" id="label-quality-engineering">5%</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Technological Topics Section -->
+        <div id="technological-topics">
+            <h1>Technological Topics</h1>
+
+            <div class="section" id="graphql-hasura">
+                <div class="section-header">
+                    <h2>GraphQL (Hasura)</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Deepen your knowledge of GraphQL since it's a core API layer. Understand how Hasura handles
+                        dynamic
+                        schema generation and integrations with backend services.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-graphql-hasura"></div>
+                    </div>
+                    <div class="progress-label" id="label-graphql-hasura">30%</div>
+                </div>
+            </div>
+
+            <div class="section" id="nodejs">
+                <div class="section-header">
+                    <h2>Node.js</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Familiarize yourself with the microservices architecture built on Node.js, especially for tasks
+                        like
+                        cache invalidation and event handling.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-nodejs"></div>
+                    </div>
+                    <div class="progress-label" id="label-nodejs">50%</div>
+                </div>
+            </div>
+
+            <div class="section" id="event-driven-architecture">
+                <div class="section-header">
+                    <h2>Event-Driven Architecture</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Learn about eventing systems and how they integrate with serverless workflows (e.g., Pub/Sub
+                        systems).</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-event-driven-architecture"></div>
+                    </div>
+                    <div class="progress-label" id="label-event-driven-architecture">20%</div>
+                </div>
+            </div>
+
+            <div class="section" id="cdn">
+                <div class="section-header">
+                    <h2>Content Delivery Network (CDN)</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Understand how CDNs work in delivering fast, secure content (e.g., Edgio in this case).</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-cdn"></div>
+                    </div>
+                    <div class="progress-label" id="label-cdn">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="sso">
+                <div class="section-header">
+                    <h2>SSO and Identity Management</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Study how SSO services integrate with APIs and other application components.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-sso"></div>
+                    </div>
+                    <div class="progress-label" id="label-sso">35%</div>
+                </div>
+            </div>
+
+            <div class="section" id="cloud-native-services">
+                <div class="section-header">
+                    <h2>Cloud-Native Services</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Learn about PaaS and headless SaaS solutions and their integrations in cloud environments.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-cloud-native-services"></div>
+                    </div>
+                    <div class="progress-label" id="label-cloud-native-services">20%</div>
+                </div>
+            </div>
+
+            <div class="section" id="cms-media-handling">
+                <div class="section-header">
+                    <h2>CMS and Media Handling</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Learn how the CMS (Content Management System) interacts with video, media, and other content
+                        layers.
+                    </p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-cms-media-handling"></div>
+                    </div>
+                    <div class="progress-label" id="label-cms-media-handling">25%</div>
+                </div>
+            </div>
+
+            <div class="section" id="data-management-analytics">
+                <div class="section-header">
+                    <h2>Data Management and Analytics</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Explore Google Tag Manager, Google Analytics, and the Data Warehouse integration for tracking
+                        user
+                        behavior.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-data-management-analytics"></div>
+                    </div>
+                    <div class="progress-label" id="label-data-management-analytics">30%</div>
+                </div>
+            </div>
+
+            <div class="section" id="ecommerce-integration">
+                <div class="section-header">
+                    <h2>eCommerce Integration</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Study Hybris and payment integrations like CloudPay for infrastructure support in transactions.
+                    </p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-ecommerce-integration"></div>
+                    </div>
+                    <div class="progress-label" id="label-ecommerce-integration">15%</div>
+                </div>
+            </div>
+
+            <div class="section" id="cloud-technologies">
+                <div class="section-header">
+                    <h2>Cloud Technologies</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Focus on AWS or GCP services for cloud hosting, serverless computing, and storage.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-cloud-technologies"></div>
+                    </div>
+                    <div class="progress-label" id="label-cloud-technologies">20%</div>
+                </div>
+            </div>
+
+            <div class="section" id="infrastructure-as-code">
+                <div class="section-header">
+                    <h2>Infrastructure-as-Code (IaC)</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Tools like Terraform or CloudFormation to manage infrastructure efficiently.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-infrastructure-as-code"></div>
+                    </div>
+                    <div class="progress-label" id="label-infrastructure-as-code">10%</div>
+                </div>
+            </div>
+
+            <div class="section" id="api-design-management">
+                <div class="section-header">
+                    <h2>API Design and Management</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Learn about REST vs GraphQL, API gateways (e.g., Kong, AWS API Gateway), and secure API
+                        practices.
+                    </p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-api-design-management"></div>
+                    </div>
+                    <div class="progress-label" id="label-api-design-management">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="monitoring-logging">
+                <div class="section-header">
+                    <h2>Monitoring and Logging</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Tools like Prometheus, Grafana, and ELK Stack to track performance and troubleshoot issues.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-monitoring-logging"></div>
+                    </div>
+                    <div class="progress-label" id="label-monitoring-logging">0%</div>
+                </div>
+            </div>
+
+            <div class="section" id="devops-ci-cd">
+                <div class="section-header">
+                    <h2>DevOps and CI/CD</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Tools like Jenkins, CircleCI, and GitHub Actions to support smooth development and deployment
+                        processes.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-devops-ci-cd"></div>
+                    </div>
+                    <div class="progress-label" id="label-devops-ci-cd">25%</div>
+                </div>
+            </div>
+
+            <div class="section" id="kubernetes">
+                <div class="section-header">
+                    <h2>Kubernetes</h2>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+                <div class="section-content">
+                    <p>Basics of container orchestration, with gradual learning through hands-on tasks if relevant.</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-inner" id="progress-kubernetes"></div>
+                    </div>
+                    <div class="progress-label" id="label-kubernetes">15%</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Unified data structure for all topics
+        const progressData = {
+            "north-star": 0,
+            "application-architecture": 0,
+            "key-solution-decisions": 0,
+            "technical-enablers": 0,
+            "api-endpoints": 20,
+            "technical-bootstrap": 0,
+            "data-architecture": 0,
+            "reporting": 0,
+            "quality-engineering": 5,
+            "graphql-hasura": 0,
+            "nodejs": 100,
+            "event-driven-architecture": 100,
+            "cdn": 100,
+            "sso": 5,
+            "cloud-native-services": 50,
+            "cms-media-handling": 0,
+            "data-management-analytics": 0,
+            "ecommerce-integration": 100,
+            "cloud-technologies": 50,
+            "infrastructure-as-code": 0,
+            "api-design-management": 100,
+            "monitoring-logging": 20,
+            "devops-ci-cd": 0,
+            "kubernetes": 0,
+        };
+
+        // Update individual progress bars
+        function updateProgressBars() {
+            Object.entries(progressData).forEach(([sectionId, progress]) => {
+                const progressBar = document.getElementById(`progress-${sectionId}`);
+                const progressLabel = document.getElementById(`label-${sectionId}`);
+                const sectionTitle = document.querySelector(`#${sectionId} h2`);
+
+                if (progressBar && progressLabel && sectionTitle) {
+                    progressBar.style.width = progress + "%";
+                    progressLabel.innerText = progress + "%";
+
+                    // Apply dynamic colors based on progress
+                    if (progress === 0) {
+                        progressBar.style.backgroundColor = "yellow"; // Not started
+                        progressLabel.style.color = "yellow"; // Label color
+                        sectionTitle.style.color = "yellow"; // Title color
+                    } else if (progress > 0 && progress < 100) {
+                        progressBar.style.backgroundColor = "#00bcd4"; // In progress
+                        progressLabel.style.color = "#00bcd4"; // Label color
+                        sectionTitle.style.color = "#00bcd4"; // Title color
+                    } else if (progress === 100) {
+                        progressBar.style.backgroundColor = "lightgreen"; // Completed
+                        progressLabel.style.color = "lightgreen"; // Label color
+                        sectionTitle.style.color = "lightgreen"; // Title color
+                    }
+                }
+            });
+        }
+
+        // Update the global progress bar
+        function updateTopProgressBar() {
+            const totalTopics = Object.keys(progressData).length; // Total number of topics
+            const totalProgress = Object.values(progressData).reduce((sum, value) => sum + value, 0); // Sum of all progress
+            const overallProgress = totalProgress / totalTopics; // Calculate overall progress percentage
+
+            const topProgressBar = document.getElementById("top-progress-bar"); // Get the top progress bar
+            const overallProgressLabel = document.getElementById("overall-progress-label"); // Get the overall progress label
+
+            // Update top progress bar width and label
+            topProgressBar.style.width = overallProgress + "%";
+            overallProgressLabel.innerText = Math.round(overallProgress) + "%";
+        }
+
+        // Toggle section details
+        document.querySelectorAll(".section-header").forEach(header => {
+            header.addEventListener("click", () => {
+                const sectionContent = header.nextElementSibling;
+                const arrow = header.querySelector(".arrow");
+
+                if (sectionContent.style.display === "none" || !sectionContent.style.display) {
+                    sectionContent.style.display = "block";
+                    arrow.style.transform = "rotate(0deg)";
+                } else {
+                    sectionContent.style.display = "none";
+                    arrow.style.transform = "rotate(-90deg)";
+                }
+            });
+        });
+
+        // Initialize progress bars and global progress
+        updateProgressBars();
+        updateTopProgressBar();
+
+    </script>
+</body>
+
+</html>
